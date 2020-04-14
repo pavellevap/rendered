@@ -9,24 +9,25 @@
 
 class Triangle : public Primitive {
 public:
+    Triangle(): material(nullptr), texture(nullptr) {}
 
-    virtual RayIntersection intersect(Ray ray) const override;
+    RayIntersection intersect(Ray ray) const override;
 
-    virtual Box getBoundingBox() const override;
+    Box getBoundingBox() const override;
 
-    virtual void setMaterial(const Material* material) override {
+    void setMaterial(const Material* material) override {
         this->material = material;
     }
 
-    virtual const Material* getMaterial() const override {
+    const Material* getMaterial() const override {
         return material;
     }
 
-    virtual void setTexture (const RGBImage* texture) override {
+    void setTexture (const RGBImage* texture) override {
         this->texture = texture;
     }
 
-    virtual const RGBImage* getTexture() const override {
+    const RGBImage* getTexture() const override {
         return texture;
     }
 

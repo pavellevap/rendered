@@ -12,11 +12,11 @@ class Union : public ClosedThing {
 public:
     Union(ClosedThing* a, ClosedThing* b) : a(a), b(b) { }
 
-    virtual Box getBoundingBox() const override {
+    Box getBoundingBox() const override {
         return Box::unite(a->getBoundingBox(), b->getBoundingBox());
     }
 
-    virtual RayIntersection intersect(Ray ray) const override {
+    RayIntersection intersect(Ray ray) const override {
         RayIntersection inter;
         bool inside[2] = {a->isInside(ray.origin), b->isInside(ray.origin)};
         double dist = 0;
@@ -52,7 +52,7 @@ public:
         return inter;
     };
 
-    virtual bool isInside(Point3D point) const override {
+    bool isInside(Point3D point) const override {
         return a->isInside(point) || b->isInside(point);
     }
 

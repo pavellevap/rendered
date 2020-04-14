@@ -10,6 +10,7 @@
 #include "Material.h"
 #include "RGB/RGBImage.h"
 
+
 class RayIntersection {
 public:
     RayIntersection() : isValid(false), material(nullptr), texture(nullptr) {}
@@ -33,7 +34,9 @@ public:
     }
 };
 
+
 class Intersectable {
+public:
     virtual RayIntersection intersect(Ray ray) const = 0;
 };
 

@@ -11,8 +11,9 @@
 
 class Parallelepiped : public Primitive, public ClosedThing {
 public:
+    Parallelepiped(): vertex(Point3D()), material(nullptr), texture(nullptr) {}
 
-    virtual RayIntersection intersect(Ray ray) const override {
+    RayIntersection intersect(Ray ray) const override {
         RayIntersection inter;
 
         Point3D otherVertex = (Vector3D(vertex) + edges[0] + edges[1] + edges[2]).toPoint3D();
@@ -26,7 +27,7 @@ public:
         return inter;
     }
 
-    virtual Box getBoundingBox() const override {
+    Box getBoundingBox() const override {
         Box box = Box(vertex, vertex);
 
         Point3D otherVertex;
@@ -55,7 +56,7 @@ public:
         return box;
     }
 
-    virtual bool isInside(Point3D point) const {
+    bool isInside(Point3D point) const override {
         const static double EPS = 1e-5;
         Matrix3x3 matrix(edges[0], edges[1], edges[2]);
         matrix = matrix.inverse();
@@ -63,21 +64,20 @@ public:
         return v.x > EPS && v.x < 1 - EPS && v.y > EPS && v.y < 1 - EPS && v.z > EPS && v.z < 1 - EPS;
     }
 
-    virtual void setMaterial(const Material* material) override {
+    void setMaterial(const Material* material) override {
         this->material = material;
     }
 
-    virtual const Material* getMaterial() const override {
+    const Material* getMaterial() const override {
         return material;
     }
 
-    virtual void setTexture (const RGBImage* texture) override {
-        //this->texture = texture;
+    void setTexture (const RGBImage* texture) override {
+        this->texture = texture;
     }
 
-    virtual const RGBImage* getTexture() const override {
-        //return texture;
-        return nullptr;
+    const RGBImage* getTexture() const override {
+        return texture;
     }
 
 //private:
@@ -85,38 +85,24 @@ public:
     Vector3D edges[3];
 
     const Material* material;
-    //const RGBImage* texture;
+    const RGBImage* texture;
 
 private:
     RayIntersection intersectParallelogram(Ray ray, Point3D p, Vector3D v1, Vector3D v2) const {
         Quadrangle parallelorgam;
         parallelorgam.material = material;
-        parallelorgam.texture = nullptr;
+        parallelorgam.texture = texture;
         parallelorgam.norms[0] = parallelorgam.norms[1] = parallelorgam.norms[2] = parallelorgam.norms[3] = cross(v1, v2).normalize();
         parallelorgam.points[0] = p;
         parallelorgam.points[1] = (Vector3D(p) + v1).toPoint3D();
         parallelorgam.points[2] = (Vector3D(p) + v1 + v2).toPoint3D();
         parallelorgam.points[3] = (Vector3D(p) + v2).toPoint3D();
+        parallelorgam.texCoords[0] = Point2D(0, 0);
+        parallelorgam.texCoords[1] = Point2D(1, 0);
+        parallelorgam.texCoords[2] = Point2D(1, 1);
+        parallelorgam.texCoords[3] = Point2D(0, 1);
 
         return parallelorgam.intersect(ray);
-
-        /*const static double EPS = 1e-5;
-        RayIntersection inter;
-
-        double b = dot(v1, cross(v2, ray.dir));
-        if (std::abs(b) < EPS)
-            return inter; // invalid
-        double a = dot(v1, cross(v2, ray.origin));
-        inter.rayCoord = -a / b;
-        if (inter.rayCoord < EPS)
-            return inter; // invalid
-        inter.point = ray.getPoint(inter.rayCoord);
-        Vector3D v(p, inter.point);
-        if (dot(v, v1) < 0 || dot(v, v1) > v1.squaredLen() || dot(v, v2) < 0 || dot(v, v2) > v2.squaredLen())
-            return inter; // invalid
-        inter.isValid = true;
-        inter.norm = cross(v1, v2).normalize();
-        return inter;*/
     }
 };
 

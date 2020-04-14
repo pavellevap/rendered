@@ -62,7 +62,7 @@ void DrawImage(const RGBImage& image) {
     }
 
     SDL_RenderClear(SDLRenderer);
-    SDL_RenderCopy(SDLRenderer, texture, NULL, NULL);
+    SDL_RenderCopy(SDLRenderer, texture, nullptr, nullptr);
     SDL_RenderPresent(SDLRenderer);
 
     SDL_DestroyTexture(texture);
@@ -83,7 +83,7 @@ int MainLoop() {
 }
 
 RGBImage* CreateChessboardTexture(size_t width, size_t height) {
-    RGBImage* texture = new RGBImage(width, height);
+    auto* texture = new RGBImage(width, height);
     for (size_t i = 0; i < height; i++)
         for (size_t j = 0; j < width; j++)
             if ((i + j) & 1)
@@ -93,7 +93,7 @@ RGBImage* CreateChessboardTexture(size_t width, size_t height) {
     return texture;
 }
 
-RGBImage* LoadTextureFromBMP(std::string filename) {
+RGBImage* LoadTextureFromBMP(const std::string& filename) {
     SDL_Surface* surface = SDL_LoadBMP(filename.c_str());
     if (surface == nullptr) {
         std::cerr << "Cannot load texture. SDL error: " << SDL_GetError() << std::endl;
@@ -101,13 +101,13 @@ RGBImage* LoadTextureFromBMP(std::string filename) {
     }
     size_t bytesPerPixel = surface->format->BytesPerPixel;
 
-    RGBImage* texture = new RGBImage(surface->w, surface->h);
+    auto* texture = new RGBImage(surface->w, surface->h);
     for (size_t i = 0; i < surface->h; i++)
         for (size_t j = 0; j < surface->w; j++) { // mud
             size_t index = i * surface->w + j;
-            double b = ((unsigned char*)(surface->pixels))[index * bytesPerPixel + 0] / 255.0f;
-            double g = ((unsigned char*)(surface->pixels))[index * bytesPerPixel + 1] / 255.0f;
-            double r = ((unsigned char*)(surface->pixels))[index * bytesPerPixel + 2] / 255.0f;
+            double b = ((unsigned char*)(surface->pixels))[index * bytesPerPixel + 0] / 255.0;
+            double g = ((unsigned char*)(surface->pixels))[index * bytesPerPixel + 1] / 255.0;
+            double r = ((unsigned char*)(surface->pixels))[index * bytesPerPixel + 2] / 255.0;
             texture->setPixel(i, j, RGBColor(r, g, b));
         }
 
@@ -122,7 +122,7 @@ RGBImage* LoadTextureFromBMP(std::string filename) {
 // Symbol g is ignored
 // Symbol s is ignored
 // After f must be either 3 or 4 strings in following format: %d/%d/%d
-Object* LoadObjectFromObj(std::string filename) {
+Object* LoadObjectFromObj(const std::string& filename) {
     ifstream in(filename);
 
     std::vector<Point3D> vertices;
@@ -166,7 +166,7 @@ Object* LoadObjectFromObj(std::string filename) {
                 words.push_back(word);
 
             if (words.size() == 3) {
-                Triangle* triangle = new Triangle();
+                auto* triangle = new Triangle();
                 for (int i = 0; i < 3; i++) {
                     int v, vt, vn;
                     sscanf(words[i].c_str(), "%d/%d/%d", &v, &vt, &vn);
@@ -179,7 +179,7 @@ Object* LoadObjectFromObj(std::string filename) {
                 primitives.push_back(triangle);
             }
             else if (words.size() == 4) {
-                Quadrangle* quadrangle = new Quadrangle();
+                auto* quadrangle = new Quadrangle();
                 for (int i = 0; i < 4; i++) {
                     int v, vt, vn;
                     sscanf(words[i].c_str(), "%d/%d/%d", &v, &vt, &vn);
@@ -208,9 +208,9 @@ Object* LoadObjectFromObj(std::string filename) {
 Scene LoadScene1(size_t width, size_t height) {
     Scene scene;
 
-    RGBImage* waterTexture = LoadTextureFromBMP("/home/pavel/ClionProjects/Renderer/textures/Water.bmp");
+    RGBImage* waterTexture = LoadTextureFromBMP("textures/Water.bmp");
 
-    Quadrangle* quadrangle = new Quadrangle;
+    auto* quadrangle = new Quadrangle;
     quadrangle->points[0] = Point3D(-1.0f, -1.0f, -1.5f);
     quadrangle->points[1] = Point3D(-1.0f, 1.0f, -1.5f);
     quadrangle->points[2] = Point3D(1.0f, 1.0f, -1.5f);
@@ -229,42 +229,46 @@ Scene LoadScene1(size_t width, size_t height) {
     quadrangle->material = (Material::BLACK_HOLE);
     quadrangle->texture = (waterTexture);
 
-    Object* rectangle = new Object({quadrangle});
+    auto* rectangle = new Object({quadrangle});
 
-    Sphere* sphere = new Sphere;
+    auto* sphere = new Sphere;
     sphere->center = Point3D(0, -0.2f, -1);
     sphere->radius = 0.1;
     sphere->setMaterial(Material::changeColor(Material::BLACK_HOLE, RGBColor::BLUE));
 
-    Sphere* sphere1 = new Sphere;
+    auto* sphere1 = new Sphere;
     sphere1->center = Point3D(0, 0, -1);
     sphere1->radius = 0.2;
     sphere1->setMaterial(Material::changeColor(Material::BLACK_HOLE, RGBColor::RED));
 
-    Sphere* sphere2 = new Sphere;
+    auto* sphere2 = new Sphere;
     sphere2->center = Point3D(sinf(104 / 3.1415f) * 0.2f, -cosf(104 / 3.1415f) * 0.2f, -1);
     sphere2->radius = 0.1;
     sphere2->setMaterial(Material::changeColor(Material::BLACK_HOLE, RGBColor::BLUE));
 
-    Object* molecule = new Object({sphere, sphere1, sphere2});
+    auto* molecule = new Object({sphere, sphere1, sphere2});
 
-    PointLight* source1 = new PointLight;
+    auto* source1 = new PointLight;
     source1->position = Point3D(2, 0, 1);
     source1->color = RGBColor::WHITE;
     source1->quadricAttenuation = 0.2f;
 
-    PointLight* source2 = new PointLight;
+    auto* source2 = new PointLight;
     source2->position = Point3D(1, 1, 1);
     source2->color = RGBColor::WHITE;
     source2->quadricAttenuation = 0.3f;
 
     Camera camera(Point3D(0, 0, 1), Vector3D(0, 0, -1), Vector3D(0, 1, 0), 1.0f, 1.0f * width / height, 1.0f);
 
+    auto* ambientLight = new AmbientLight;
+    ambientLight->color = RGBColor(0.2, 0.2, 0.2);
+
     scene.camera = camera;
     scene.things.push_back(rectangle);
     scene.things.push_back(molecule);
     scene.pointLights.push_back(source1);
     scene.pointLights.push_back(source2);
+    scene.ambientLight = ambientLight;
 
     return scene;
 }
@@ -272,16 +276,16 @@ Scene LoadScene1(size_t width, size_t height) {
 Scene LoadScene2(size_t width, size_t height) {
     Scene scene;
 
-    Object* gnom = LoadObjectFromObj("/home/pavel/ClionProjects/Renderer/objects/Gnom/Gnom.obj");
+    Object* gnom = LoadObjectFromObj("objects/Gnom/Gnom.obj");
 
-    RGBImage* texture = LoadTextureFromBMP("/home/pavel/ClionProjects/Renderer/objects/Gnom/gnom.bmp");
+    RGBImage* texture = LoadTextureFromBMP("objects/Gnom/gnom.bmp");
 
-    PointLight* source1 = new PointLight;
+    auto* source1 = new PointLight;
     source1->position = Point3D(10, 5, 10);
     source1->color = RGBColor::WHITE;
     source1->quadricAttenuation = 1.0f / 150;
 
-    AmbientLight* source2 = new AmbientLight;
+    auto* source2 = new AmbientLight;
     source2->color = RGBColor(0.5f, 0.5f, 0.5f);
 
     scene.pointLights.push_back(source1);
@@ -300,7 +304,7 @@ Scene LoadScene2(size_t width, size_t height) {
 Scene LoadScene3(size_t width, size_t height) {
     Scene scene;
 
-    Quadrangle* quadrangle = new Quadrangle;
+    auto* quadrangle = new Quadrangle;
     quadrangle->points[0] = Point3D(-2.0f, -0.05f, -2.0f);
     quadrangle->points[1] = Point3D(-2.0f, -0.05f, 2.0f);
     quadrangle->points[2] = Point3D(2.0f, -0.05f, 2.0f);
@@ -319,7 +323,7 @@ Scene LoadScene3(size_t width, size_t height) {
     quadrangle->texture = CreateChessboardTexture(100, 100);
     quadrangle->material = Material::POLISHED_METAL;
 
-    Quadrangle* quadrangle2 = new Quadrangle;
+    auto* quadrangle2 = new Quadrangle;
     quadrangle2->points[0] = Point3D(-2.0f, 1.0f, -2.0f);
     quadrangle2->points[1] = Point3D(-2.0f, 1.0f, 2.0f);
     quadrangle2->points[2] = Point3D(2.0f, 1.0f, 2.0f);
@@ -338,33 +342,33 @@ Scene LoadScene3(size_t width, size_t height) {
     quadrangle2->texture = CreateChessboardTexture(100, 100);
     quadrangle2->material = Material::POLISHED_METAL;
 
-    Object* rectangle = new Object({quadrangle/*, quadrangle2*/});
+    auto* rectangle = new Object({quadrangle/*, quadrangle2*/});
 
-    Sphere* sphere1 = new Sphere;
+    auto* sphere1 = new Sphere;
     sphere1->center = Point3D(0.25f, 0.25f, 1);
     sphere1->radius = 0.25;
 
     sphere1->material = Material::changeColor(Material::POLISHED_METAL, RGBColor::YELLOW);
 
-    Sphere* sphere2 = new Sphere;
+    auto* sphere2 = new Sphere;
     sphere2->center = Point3D(-0.25f, 0.25f, 1);
     sphere2->radius = 0.25;
 
     sphere2->material = Material::changeColor(Material::POLISHED_METAL, RGBColor::RED);
 
-    Sphere* sphere3 = new Sphere;
+    auto* sphere3 = new Sphere;
     sphere3->center = Point3D(0, 0.25f + 2 * 0.25f * std::sin(3.1415f / 3), 1);
     sphere3->radius = 0.25;
 
     sphere3->material = Material::changeColor(Material::POLISHED_METAL, RGBColor::GREEN);
 
-    PointLight* source1 = new PointLight;
+    auto* source1 = new PointLight;
     source1->position = Point3D(1.0, 0.5f, 1);
     source1->color = RGBColor(0.99f, 0.99f, 0.6f);
     source1->quadricAttenuation = 0;
 
-    AmbientLight* source2 = new AmbientLight;
-    source2->color = RGBColor(0.2f, 0.2f, 0.2f);
+    auto* source2 = new AmbientLight;
+    source2->color = RGBColor(0.3f, 0.3f, 0.3f);
 
     Camera camera(Point3D(0, 0, -1), Vector3D(0, 0, 1), Vector3D(0, 1, 0), 1.0f, 1.0f * width / height, 1.0f);
 
@@ -380,7 +384,7 @@ Scene LoadScene3(size_t width, size_t height) {
 Scene LoadScene4(size_t width, size_t height) {
     Scene scene;
 
-    Quadrangle* quadrangle = new Quadrangle;
+    auto* quadrangle = new Quadrangle;
     quadrangle->points[0] = Point3D(-2.0f, -0.1f, -2.0f);
     quadrangle->points[1] = Point3D(-2.0f, -0.1f, 2.0f);
     quadrangle->points[2] = Point3D(2.0f, -0.1f, 2.0f);
@@ -399,7 +403,7 @@ Scene LoadScene4(size_t width, size_t height) {
     quadrangle->texture = CreateChessboardTexture(100, 100);
     quadrangle->material = Material::METAL;
 
-    Quadrangle* quadrangle2 = new Quadrangle;
+    auto* quadrangle2 = new Quadrangle;
     quadrangle2->points[0] = Point3D(-0.3f, -2.0f, 2.0f);
     quadrangle2->points[1] = Point3D(-0.3f, -2.0f, -2.0f);
     quadrangle2->points[2] = Point3D(-0.3f, 2.0f, -2.0f);
@@ -418,7 +422,7 @@ Scene LoadScene4(size_t width, size_t height) {
     quadrangle2->texture = nullptr;
     quadrangle2->material = Material::changeColor(Material::WATER, RGBColor::BLUE);
 
-    Quadrangle* quadrangle3 = new Quadrangle;
+    auto* quadrangle3 = new Quadrangle;
     quadrangle3->points[0] = Point3D(0.5f, -2.0f, 2.0f);
     quadrangle3->points[1] = Point3D(0.5f, -2.0f, -2.0f);
     quadrangle3->points[2] = Point3D(0.5f, 2.0f, -2.0f);
@@ -437,30 +441,23 @@ Scene LoadScene4(size_t width, size_t height) {
     quadrangle3->texture = nullptr;
     quadrangle3->material = Material::changeColor(Material::otherSide(Material::WATER), RGBColor::BLUE);
 
-    Parallelepiped* parallelepiped = new Parallelepiped;
+    auto* parallelepiped = new Parallelepiped;
     parallelepiped->vertex = Point3D(-1, -0.1f, 0.5f);
     parallelepiped->edges[0] = Vector3D(2.0f, 0, -1.0f);
     parallelepiped->edges[1] = Vector3D(0, 0.1f, 0);
     parallelepiped->edges[2] = Vector3D(-0.1f, 0, -0.2f) / std::sqrt(0.05) * 0.1;
-
     parallelepiped->setMaterial(Material::changeColor(Material::METAL, RGBColor::RED));
 
-    Sphere* sphere = new Sphere;
-    sphere->center = Point3D(0.8, 0.2, 0);
-    sphere->radius = 0.2;
-    sphere->material = Material::METAL;
-
-    PointLight* source1 = new PointLight;
+    auto* source1 = new PointLight;
     source1->color = RGBColor(1.0f, 1.0f, 1.0f);
     source1->position = Point3D(-0.5f, 0.2f, -0.7f);
     source1->quadricAttenuation = 0.001f;
-    AmbientLight* source2 = new AmbientLight;
+    auto* source2 = new AmbientLight;
     source2->color = RGBColor(0.1f, 0.1f, 0.1f);
 
     Camera camera(Point3D(-1.0, 0.25f, 0), Vector3D(1.0, -0.25f, 0), Vector3D(0, 1, 0), 1.0f, 1.0f * width / height, 1.0f);
 
     scene.camera = camera;
-    scene.things.push_back(new Object({sphere}));
     scene.things.push_back(new Object({parallelepiped}));
     scene.things.push_back(new Object({quadrangle}));
     scene.things.push_back(new Object({quadrangle2}));
@@ -474,7 +471,9 @@ Scene LoadScene4(size_t width, size_t height) {
 Scene LoadScene5(size_t width, size_t height) {
     Scene scene;
 
-    Quadrangle* quadrangle = new Quadrangle;
+    RGBImage* texture = LoadTextureFromBMP("textures/arrow.bmp");
+
+    auto* quadrangle = new Quadrangle;
     quadrangle->points[0] = Point3D(-2.0f, -0.1f, -2.0f);
     quadrangle->points[1] = Point3D(-2.0f, -0.1f, 2.0f);
     quadrangle->points[2] = Point3D(2.0f, -0.1f, 2.0f);
@@ -493,29 +492,30 @@ Scene LoadScene5(size_t width, size_t height) {
     quadrangle->texture = CreateChessboardTexture(100, 100);
     quadrangle->material = Material::METAL;
 
-    Sphere* sphere = new Sphere;
+    auto* sphere = new Sphere;
     sphere->center = Point3D(0, 0, 0);
     sphere->radius = 0.1;
     sphere->material = Material::WATER;
 
-    Sphere* sphere2 = new Sphere;
+    auto* sphere2 = new Sphere;
     sphere2->center = Point3D(0, 0, 0);
     sphere2->radius = 0.099;
     sphere2->material = Material::otherSide(Material::WATER);
 
-    Parallelepiped* parallelepiped = new Parallelepiped;
+    auto* parallelepiped = new Parallelepiped;
     parallelepiped->vertex = Point3D(0.4f, -0.1f, -0.5f);
     parallelepiped->edges[0] = Vector3D(0.0f, 0.0f, 1.0f);
     parallelepiped->edges[1] = Vector3D(0.0f, 0.1f, 0.0f);
     parallelepiped->edges[2] = Vector3D(0.1f, 0.0f, 0.0f);
 
+    parallelepiped->setTexture(texture);
     parallelepiped->setMaterial(Material::changeColor(Material::METAL, RGBColor::RED));
 
-    PointLight* source1 = new PointLight;
+    auto* source1 = new PointLight;
     source1->color = RGBColor(1.0f, 1.0f, 1.0f);
     source1->position = Point3D(-0.5f, 0.2f, -0.7f);
     source1->quadricAttenuation = 0.001f;
-    AmbientLight* source2 = new AmbientLight;
+    auto* source2 = new AmbientLight;
     source2->color = RGBColor(0.1f, 0.1f, 0.1f);
 
     Camera camera(Point3D(-1.0f, 0.25f, 0), Vector3D(1.0, -0.25f, 0), Vector3D(0, 1, 0), 1.0f, 1.0f * width / height, 1.0f);
@@ -534,7 +534,9 @@ Scene LoadScene5(size_t width, size_t height) {
 Scene LoadScene6(size_t width, size_t height) {
     Scene scene;
 
-    Quadrangle* quadrangle = new Quadrangle;
+    RGBImage* texture = LoadTextureFromBMP("textures/EarthMap.bmp");
+
+    auto* quadrangle = new Quadrangle;
     quadrangle->points[0] = Point3D(-2.0f, -0.1f, -2.0f);
     quadrangle->points[1] = Point3D(-2.0f, -0.1f, 2.0f);
     quadrangle->points[2] = Point3D(2.0f, -0.1f, 2.0f);
@@ -553,49 +555,51 @@ Scene LoadScene6(size_t width, size_t height) {
     quadrangle->texture = CreateChessboardTexture(100, 100);
     quadrangle->material = Material::METAL;
 
-    Sphere* sphere = new Sphere;
+    auto* sphere = new Sphere;
     sphere->center = Point3D(0, 0, 0);
     sphere->radius = 0.1;
     sphere->material = Material::METAL;
+    sphere->texture = texture;
 
-    Parallelepiped* parallelepiped = new Parallelepiped;
+    auto* parallelepiped = new Parallelepiped;
     parallelepiped->vertex = Point3D(0.0f, 0.0f, -0.0f);
     parallelepiped->edges[0] = Vector3D(0.0f, 0.0f, 0.1f);
     parallelepiped->edges[1] = Vector3D(0.0f, 0.1f, 0.0f);
     parallelepiped->edges[2] = Vector3D(0.1f, 0.0f, 0.0f);
     parallelepiped->setMaterial(Material::changeColor(Material::METAL, RGBColor::RED));
 
-    Sphere* smallSphere = new Sphere;
+    auto* smallSphere = new Sphere;
     smallSphere->center = Point3D(0.0f, 0.1f, 0.0f);
     smallSphere->radius = 0.03;
     smallSphere->material = Material::changeColor(Material::METAL, RGBColor::YELLOW);
 
-    Sphere* sphere2 = new Sphere;
+    auto* sphere2 = new Sphere;
     sphere2->center = Point3D(0.1f, 0.1f, 0.1f);
     sphere2->radius = 0.1;
     sphere2->material = Material::METAL;
+    sphere2->texture = texture;
 
-    Parallelepiped* parallelepiped2 = new Parallelepiped;
+    auto* parallelepiped2 = new Parallelepiped;
     parallelepiped2->vertex = Point3D(0.1f, 0.1f, 0.1f);
     parallelepiped2->edges[0] = Vector3D(0.0f, 0.0f, 0.1f);
     parallelepiped2->edges[1] = Vector3D(0.0f, 0.1f, 0.0f);
     parallelepiped2->edges[2] = Vector3D(0.1f, 0.0f, 0.0f);
     parallelepiped2->setMaterial(Material::changeColor(Material::METAL, RGBColor::RED));
 
-    Sphere* smallSphere2 = new Sphere;
+    auto* smallSphere2 = new Sphere;
     smallSphere2->center = Point3D(0.1f, 0.1f, 0.2f);
     smallSphere2->radius = 0.03;
     smallSphere2->material = Material::changeColor(Material::METAL, RGBColor::YELLOW);
 
-    PointLight* source1 = new PointLight;
+    auto* source1 = new PointLight;
     source1->color = RGBColor(1.0f, 1.0f, 1.0f);
     source1->position = Point3D(0.00f, 0.4f, 0.00f);
     source1->quadricAttenuation = 0.0f;
-    PointLight* source3 = new PointLight;
+    auto* source3 = new PointLight;
     source3->color = RGBColor(1.0f, 1.0f, 1.0f);
     source3->position = Point3D(-0.5f, 0.7f, 0.0f);
     source3->quadricAttenuation = 0.0f;
-    AmbientLight* source2 = new AmbientLight;
+    auto* source2 = new AmbientLight;
     source2->color = RGBColor(0.1f, 0.1f, 0.1f);
 
     Camera camera(Point3D(-0.1f, 0.4f, 0.5f), Vector3D(0.1f, -0.4f, -0.5f), Vector3D(0, 1, 0), 1.0f, 1.0f * width / height, 1.0f);
@@ -618,14 +622,14 @@ int main() {
         return 1;
     }
 
-    Scene scene = LoadScene4(WIDTH, HEIGHT);
+    Scene scene = LoadScene6(WIDTH, HEIGHT);
     Renderer rend(WIDTH, HEIGHT, 3);
 
     auto start = std::chrono::steady_clock::now();
     RGBImage image = rend.renderScene(scene);
     auto end = std::chrono::steady_clock::now();
     auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "elapsed_time = " << elapsed_ms.count() << " ms\n";
+    std::cout << "render time: " << elapsed_ms.count() << " ms\n";
 
     DrawImage(image);
 

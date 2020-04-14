@@ -10,30 +10,31 @@
 
 class Sphere : public Primitive, public ClosedThing {
 public:
-    virtual RayIntersection intersect(Ray ray) const override;
+    Sphere() : center(Point3D()), radius(0), material(nullptr), texture(nullptr) {}
 
-    virtual Box getBoundingBox() const override;
+    RayIntersection intersect(Ray ray) const override;
 
-    virtual bool isInside(Point3D point) const override {
+    Box getBoundingBox() const override;
+
+    bool isInside(Point3D point) const override {
         const static double EPS = 1e-5;
         return Vector3D(point, center).len() < radius - EPS;
     }
 
-    virtual void setMaterial(const Material* material) override {
+    void setMaterial(const Material* material) override {
         this->material = material;
     }
 
-    virtual const Material* getMaterial() const override {
+    const Material* getMaterial() const override {
         return material;
     }
 
-    virtual void setTexture (const RGBImage* texture) override {
-        //this->texture = texture;
+    void setTexture (const RGBImage* texture) override {
+        this->texture = texture;
     }
 
-    virtual const RGBImage* getTexture() const override {
-        //return texture;
-        return nullptr;
+    const RGBImage* getTexture() const override {
+        return texture;
     }
 
 //private:
@@ -41,7 +42,7 @@ public:
     double radius;
 
     const Material* material;
-    //const RGBImage* texture;
+    const RGBImage* texture;
 };
 
 

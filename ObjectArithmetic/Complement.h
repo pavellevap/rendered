@@ -10,13 +10,13 @@
 
 class Complement : public ClosedThing {
 public:
-    Complement(ClosedThing* a) : a(a) { }
+    explicit Complement(ClosedThing* a) : a(a) { }
 
-    virtual Box getBoundingBox() const override {
+    Box getBoundingBox() const override {
         return a->getBoundingBox();
     }
 
-    virtual RayIntersection intersect(Ray ray) const override {
+    RayIntersection intersect(Ray ray) const override {
         RayIntersection inter = a->intersect(ray);
         if (!inter.isValid)
             return inter;
@@ -26,7 +26,7 @@ public:
         return inter;
     };
 
-    virtual bool isInside(Point3D point) const override {
+    bool isInside(Point3D point) const override {
         return !a->isInside(point);
     }
 

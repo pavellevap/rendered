@@ -11,11 +11,12 @@
 // Set of primitives related to the overall texture
 class Object : public Thing {
 public:
-    Object(const std::vector<Primitive*>& primitives) : primitives(primitives), tree(primitivesToThings(primitives)) {}
+    explicit Object(const std::vector<Primitive*>& primitives) : primitives(primitives),
+            tree(primitivesToThings(primitives)) {}
 
-    virtual RayIntersection intersect(Ray ray) const;
+    RayIntersection intersect(Ray ray) const override;
 
-    virtual Box getBoundingBox() const;
+    Box getBoundingBox() const override;
 
     void setTexture(const RGBImage* texture);
 

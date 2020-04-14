@@ -36,8 +36,8 @@ public:
 
             if (inter.texture != nullptr) {
                 RGBColor materialColor = inter.texture->getPixel(
-                        size_t(inter.texCoords.y * (inter.texture->height() - 1)),
-                        size_t(inter.texCoords.x * (inter.texture->width() - 1)));
+                        size_t(inter.texCoords.y * (inter.texture->height() - 1.0)),
+                        size_t(inter.texCoords.x * (inter.texture->width() - 1.0)));
                 inter.material = Material::changeColor(inter.material, materialColor);
             }
 

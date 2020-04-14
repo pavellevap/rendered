@@ -9,6 +9,7 @@
 #include "Box.h"
 
 class Boundable {
+public:
     virtual Box getBoundingBox() const = 0;
 };
 

@@ -44,14 +44,15 @@ bool Box::isInside(Point3D point) const {
            point.z >= min.z - EPS && point.z <= max.z + EPS;
 }
 
-Box Box::unite(Box b1, Box b2) {
-    b1.min.x = std::min(b1.min.x, b2.min.x);
-    b1.min.y = std::min(b1.min.y, b2.min.y);
-    b1.min.z = std::min(b1.min.z, b2.min.z);
+Box Box::unite(const Box& b1, const Box& b2) {
+    Box b;
+    b.min.x = std::min(b1.min.x, b2.min.x);
+    b.min.y = std::min(b1.min.y, b2.min.y);
+    b.min.z = std::min(b1.min.z, b2.min.z);
 
-    b1.max.x = std::max(b1.max.x, b2.max.x);
-    b1.max.y = std::max(b1.max.y, b2.max.y);
-    b1.max.z = std::max(b1.max.z, b2.max.z);
+    b.max.x = std::max(b1.max.x, b2.max.x);
+    b.max.y = std::max(b1.max.y, b2.max.y);
+    b.max.z = std::max(b1.max.z, b2.max.z);
 
-    return b1;
+    return b;
 }

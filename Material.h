@@ -12,7 +12,7 @@ class Material {
 public:
     Material() : ambient(RGBColor::BLACK), diffuse(RGBColor::BLACK),
                  specular(RGBColor::BLACK), emission(RGBColor::BLACK),
-                 shininess(0), reflectivity(0) {}
+                 shininess(0), reflectivity(0), refractivity(0), refractiveIndex(0) {}
     Material(RGBColor ambient, RGBColor diffuse, RGBColor specular, RGBColor emission,
              double shininess, double reflectivity, double refractivity, double refractiveIndex) :
                                     ambient(ambient), diffuse(diffuse), specular(specular), emission(emission),
@@ -45,12 +45,8 @@ public:
     RGBColor emission;
     double shininess;
     double reflectivity;
-
     double refractivity;
     double refractiveIndex; // n2/n1
 };
-
-
-
 
 #endif //RENDERER_MATERIAL_H

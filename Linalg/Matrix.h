@@ -36,7 +36,7 @@ private:
 
 class Matrix3x3 {
 public:
-    Matrix3x3() {}
+    Matrix3x3() = default;
     Matrix3x3(Vector3D col1, Vector3D col2, Vector3D col3) : cols{col1, col2, col3} { }
     Matrix3x3 transpose() const {
         Matrix3x3 res = *this;

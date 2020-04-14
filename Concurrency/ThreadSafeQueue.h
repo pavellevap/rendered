@@ -9,6 +9,8 @@
 #include <deque>
 #include <cstddef>
 #include <condition_variable>
+#include <stdexcept>
+
 
 template <class Value, class Container = std::deque<Value>>
 class ThreadSafeQueue {
@@ -19,7 +21,7 @@ public:
         std::unique_lock<std::mutex> Lock(lock);
 
         if (isClosed)
-            throw "Pushing in closed queue\n";
+            throw std::logic_error("Pushing in closed queue\n");
 
         queue.emplace_back(std::move(item));
 

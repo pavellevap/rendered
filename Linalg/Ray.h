@@ -20,7 +20,7 @@ public:
     }
 
     Point3D getPoint(double rayCoord) {
-        return (origin + dir * rayCoord).toPoint3D();
+        return (Vector3D(origin) + dir * rayCoord).toPoint3D();
     }
 
     Point3D origin;

@@ -9,10 +9,6 @@
 
 class Primitive : public Thing {
 public:
-    virtual RayIntersection intersect(Ray ray) const = 0;
-
-    virtual Box getBoundingBox() const = 0;
-
     virtual void setMaterial(const Material* material) = 0;
 
     virtual const Material* getMaterial() const = 0;

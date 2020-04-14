@@ -14,11 +14,11 @@ public:
     Box() : min(Point3D(0, 0, 0)), max(Point3D(0, 0, 0)) {}
     Box(Point3D min, Point3D max) : min(min), max(max) {}
 
-    RayIntersection intersect(Ray ray) const;
+    RayIntersection intersect(Ray ray) const override;
 
     bool isInside(Point3D point) const;
 
-    static Box unite(Box b1, Box b2);
+    static Box unite(const Box& b1, const Box& b2);
 
 //private:
     Point3D min;

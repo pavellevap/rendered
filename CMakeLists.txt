@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4)
 project(Renderer)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fopenmp  -lSDL2 -lSDL2main -lSDL_ttf -pthread -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fopenmp  -lSDL2 -lSDL2main -lSDL2_ttf -pthread -std=c++11")
 
 set(SOURCE_FILES main.cpp Scene.cpp Scene.h Primitives/Primitive.h Primitives/Triangle.cpp Primitives/Triangle.h
         Primitives/Sphere.cpp Primitives/Sphere.h Renderer.cpp Renderer.h Linalg/Point.cpp Linalg/Point.h
@@ -15,13 +15,10 @@ set(SOURCE_FILES main.cpp Scene.cpp Scene.h Primitives/Primitive.h Primitives/Tr
         ObjectArithmetic/Difference.cpp ObjectArithmetic/Difference.h Closed.h ClosedThing.cpp ClosedThing.h
         ObjectArithmetic/Intersection.cpp ObjectArithmetic/Intersection.h)
 
-
-
 add_executable(Renderer ${SOURCE_FILES})
-
 
 find_library(SDL_LIB SDL2)
 find_library(SDLMAIN_LIB SDL2main)
-find_library(SDLTTF_LIB SDL_ttf)
+find_library(SDLTTF_LIB SDL2_ttf)
 
 target_link_libraries(Renderer ${SDL_LIB} ${SDLMAIN_LIB} ${SDLTTF_LIB})

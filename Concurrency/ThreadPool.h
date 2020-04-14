@@ -8,6 +8,7 @@
 
 #include <future>
 #include <vector>
+#include <stdexcept>
 #include "ThreadSafeQueue.h"
 
 template<class T>
@@ -27,7 +28,7 @@ public:
 
     std::future<T> submit(std::function<T()> func)  {
         if (isClosed)
-            throw "Submitting in closed pool";
+            throw std::logic_error("Submitting in closed pool");
         std::packaged_task<T()> task(func);
         std::future<T> result = task.get_future();
         queue.enqueue(std::move(task));

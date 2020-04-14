@@ -7,11 +7,7 @@
 
 #include "Boundable.h"
 
-class Thing : public Boundable, public Intersectable {
-public:
-    virtual Box getBoundingBox() const = 0;
-    virtual RayIntersection intersect(Ray ray) const = 0;
-};
+class Thing : public Boundable, public Intersectable {};
 
 
 #endif //RENDERER_OBJECT3D_H

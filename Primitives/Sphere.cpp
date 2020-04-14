@@ -2,6 +2,7 @@
 // Created by pavel on 08.04.16.
 //
 
+#include <cmath>
 #include "Sphere.h"
 
 RayIntersection Sphere::intersect(Ray ray) const {
@@ -17,7 +18,7 @@ RayIntersection Sphere::intersect(Ray ray) const {
         inter.isValid = false;
         return inter;
     }
-    double d = sqrtf(d2);
+    double d = sqrt(d2);
     if (-b - d < EPS) {
         if (-b + d < EPS) {
             inter.isValid = false;
@@ -36,7 +37,14 @@ RayIntersection Sphere::intersect(Ray ray) const {
     inter.norm.normalize();
 
     inter.material = material;
-    inter.texture = nullptr;
+    inter.texture = texture;
+
+    double dx = inter.point.x - center.x;
+    double dy = inter.point.y - center.y;
+    double dz = inter.point.z - center.z;
+    double phi = atan2(dz, dx);
+    double theta = atan2(-dy, sqrt(dx * dx + dz * dz));
+    inter.texCoords = Point2D(phi / M_PI / 2 + 0.5, theta / M_PI + 0.5);
 
     return inter;
 }

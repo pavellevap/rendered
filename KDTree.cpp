@@ -21,7 +21,7 @@ RayIntersection KDTree::intersect(Ray ray) const {
 }
 
 size_t KDTree::buildTree(std::vector<size_t>& objectIndices, Dimension dim) {
-    if (objectIndices.size() == 0)
+    if (objectIndices.empty())
         return NULL_NODE_INDEX;
 
     Node newNode;

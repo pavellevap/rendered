@@ -5,11 +5,14 @@
 #ifndef RENDERER_RGBCOLOR_H
 #define RENDERER_RGBCOLOR_H
 
+#include <stdexcept>
+
 enum class RGB {R, G, B};
 
 class RGBColor {
 public:
-    RGBColor(double r = 0, double g = 0, double b = 0) : r(r), g(g), b(b) {}
+    RGBColor() = default;
+    RGBColor(double r, double g, double b) : r(r), g(g), b(b) {}
 
     double r, g, b;
 
@@ -21,7 +24,7 @@ public:
         else if (channel == RGB::B)
             return b;
         else
-            throw "there is no such channel\n";
+            throw std::invalid_argument("there is no such channel\n");
     }
 
     const double& operator [] (RGB channel) const {
@@ -32,7 +35,7 @@ public:
         else if (channel == RGB::B)
             return b;
         else
-            throw "there is no such channel\n";
+            throw std::invalid_argument("there is no such channel\n");
     }
 
     static const RGBColor WHITE;

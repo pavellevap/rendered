@@ -11,10 +11,10 @@
 
 class Vector3D {
 public:
-    Vector3D() {}
+    Vector3D() = default;
     Vector3D(double x, double y, double z) : x(x), y(y), z(z) {}
     Vector3D(Point3D p1, Point3D p2) : x(p2.x - p1.x), y(p2.y - p1.y), z(p2.z - p1.z) {}
-    Vector3D(Point3D p) : x(p.x), y(p.y), z(p.z) {}
+    explicit Vector3D(Point3D p) : x(p.x), y(p.y), z(p.z) {}
 
     double x, y, z;
 
@@ -26,7 +26,7 @@ public:
         if (dim == Dimension::Z)
             return z;
         else
-            throw "There is no such dimension\n";
+            throw std::invalid_argument("There is no such dimension\n");
     }
 
     const double& operator [] (Dimension dim) const {
@@ -37,7 +37,7 @@ public:
         if (dim == Dimension::Z)
             return z;
         else
-            throw "There is no such dimension\n";
+            throw std::invalid_argument("There is no such dimension\n");
     }
 
     Point3D toPoint3D() const {
@@ -45,7 +45,7 @@ public:
     }
 
     double len() const {
-        return sqrtf(squaredLen());
+        return sqrt(squaredLen());
     }
 
     double squaredLen() const {

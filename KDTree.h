@@ -9,9 +9,9 @@
 
 class KDTree : public Intersectable {
 public:
-    KDTree(const std::vector<Thing*>& things);
+    explicit KDTree(const std::vector<Thing*>& things);
 
-    RayIntersection intersect(Ray ray) const;
+    RayIntersection intersect(Ray ray) const override;
 
 private:
     class Plane {
