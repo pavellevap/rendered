@@ -10,6 +10,7 @@ This is a toy implementation of a ray tracing rendering algorithm.
 * Several point and ambient light sources. Shadows are processed correctly.
 * KDTree for efficient ray intersection.
 * Parallel rendering.
+* Antialiasing
 
 # How to run
 SDL and OpenMP are required for building. After installing them run

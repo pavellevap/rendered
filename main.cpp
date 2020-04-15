@@ -555,6 +555,33 @@ Scene LoadScene6(size_t width, size_t height) {
     quadrangle->texture = CreateChessboardTexture(100, 100);
     quadrangle->material = Material::METAL;
 
+    auto* wall1 = new Quadrangle;
+    wall1->points[0] = Point3D(0.3f, -0.1f, -0.7f);
+    wall1->points[1] = Point3D(0.3f, 0.4f, -0.7f);
+    wall1->points[2] = Point3D(0.3f, 0.4f, 2.3f);
+    wall1->points[3] = Point3D(0.3f, -0.1f, 2.3f);
+
+    wall1->norms[0] = Vector3D(-1, 0, 0);
+    wall1->norms[1] = Vector3D(-1, 0, 0);
+    wall1->norms[2] = Vector3D(-1, 0, 0);
+    wall1->norms[3] = Vector3D(-1, 0, 0);
+
+    wall1->material = Material::MIRROW;
+
+    auto* wall2 = new Quadrangle;
+    double angle = 2 * M_PI / 8;
+    wall2->points[0] = Point3D(0.3f, -0.1f, -0.7f);
+    wall2->points[1] = Point3D(0.3f, 0.4f, -0.7f);
+    wall2->points[2] = Point3D(0.3f - sin(angle) * 3, 0.4f, -0.7f + cos(angle) * 3);
+    wall2->points[3] = Point3D(0.3f - sin(angle) * 3, -0.1f, -0.7f + cos(angle) * 3);
+
+    wall2->norms[0] = Vector3D(cos(angle), 0, sin(angle));
+    wall2->norms[1] = Vector3D(cos(angle), 0, sin(angle));
+    wall2->norms[2] = Vector3D(cos(angle), 0, sin(angle));
+    wall2->norms[3] = Vector3D(cos(angle), 0, sin(angle));
+
+    wall2->material = Material::MIRROW;
+
     auto* sphere = new Sphere;
     sphere->center = Point3D(0, 0, 0);
     sphere->radius = 0.1;
@@ -571,7 +598,7 @@ Scene LoadScene6(size_t width, size_t height) {
     auto* smallSphere = new Sphere;
     smallSphere->center = Point3D(0.0f, 0.1f, 0.0f);
     smallSphere->radius = 0.03;
-    smallSphere->material = Material::changeColor(Material::METAL, RGBColor::YELLOW);
+    smallSphere->material = Material::changeColor(Material::METAL, RGBColor::RED);
 
     auto* sphere2 = new Sphere;
     sphere2->center = Point3D(0.1f, 0.1f, 0.1f);
@@ -587,7 +614,7 @@ Scene LoadScene6(size_t width, size_t height) {
     parallelepiped2->setMaterial(Material::changeColor(Material::METAL, RGBColor::RED));
 
     auto* smallSphere2 = new Sphere;
-    smallSphere2->center = Point3D(0.1f, 0.1f, 0.2f);
+    smallSphere2->center = Point3D(0.1f, 0.2f, 0.1f);
     smallSphere2->radius = 0.03;
     smallSphere2->material = Material::changeColor(Material::METAL, RGBColor::YELLOW);
 
@@ -597,14 +624,16 @@ Scene LoadScene6(size_t width, size_t height) {
     source1->quadricAttenuation = 0.0f;
     auto* source3 = new PointLight;
     source3->color = RGBColor(1.0f, 1.0f, 1.0f);
-    source3->position = Point3D(-0.5f, 0.7f, 0.0f);
+    source3->position = Point3D(0.2f, 0.7f, -0.3f);
     source3->quadricAttenuation = 0.0f;
     auto* source2 = new AmbientLight;
     source2->color = RGBColor(0.1f, 0.1f, 0.1f);
 
-    Camera camera(Point3D(-0.1f, 0.4f, 0.5f), Vector3D(0.1f, -0.4f, -0.5f), Vector3D(0, 1, 0), 1.0f, 1.0f * width / height, 1.0f);
+    Camera camera(Point3D(-0.2f, 0.3f, 0.9f), Vector3D(0.2f, -0.3f, -0.9f), Vector3D(0, 1, 0), 1.0f, 1.0f * width / height, 1.0f);
 
     scene.camera = camera;
+    scene.things.push_back(new Object({wall1}));
+    scene.things.push_back(new Object({wall2}));
     scene.things.push_back(new Object({quadrangle}));
     scene.things.push_back(new Union(new Intersection(sphere2, parallelepiped2), smallSphere2));
     scene.things.push_back(new Difference(new Difference(sphere, parallelepiped), smallSphere));
